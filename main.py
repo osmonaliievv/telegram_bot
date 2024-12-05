@@ -14,7 +14,7 @@ async def start_handler(message: types.Message):
     name = message.from_user.first_name
     await message.answer(
         f"Привет, {name}! \n"
-        f" Наш бот обслуживает уже 12 пользователей \n "
+        f" Наш бот обслуживает уже 10 пользователей \n "
         f"Мои команды: \n"
         f"/start - начать работу с ботом \n"
         f"/random - случайное имя \n"
