@@ -1,17 +1,12 @@
 import asyncio
-from aiogram import Bot, Dispatcher, types
-from dotenv import dotenv_values
 import logging
-
+from bot_config import dp, bot
 from handlers.other_massages import echo_router
 from handlers.start import start_router
 from handlers.myinfo import myinfo_router
 from handlers.random import randomfile
 from handlers.dialog import opros_router
 
-token = dotenv_values(".env")["BOT_TOKEN"]
-bot = Bot(token=token)
-dp = Dispatcher()
 
 async def main():
     # регистрация роутеров
