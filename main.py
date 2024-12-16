@@ -6,6 +6,7 @@ from handlers.start import start_router
 from handlers.myinfo import myinfo_router
 from handlers.random import randomfile
 from handlers.dialog import opros_router
+from handlers.review_dialog import review_router
 
 
 async def main():
@@ -14,6 +15,7 @@ async def main():
     dp.include_router(myinfo_router)
     dp.include_router(randomfile)
     dp.include_router(opros_router)
+    dp.include_router(review_router)
     # в самом конце
     dp.include_router(echo_router)
     # запуск бота
