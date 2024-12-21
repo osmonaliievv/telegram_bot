@@ -10,11 +10,7 @@ async def start_handler(message: types.Message):
         inline_keyboard=[
             [
                 types.InlineKeyboardButton(text="Оставить отзыв", callback_data="review"),
-                types.InlineKeyboardButton(text="Пожертвовать", callback_data="donate"),
-            ],
-            [
-                types.InlineKeyboardButton(text="Наш сайт", url="https://geeks.kg"),
-                types.InlineKeyboardButton(text="Наш инстаграм", url="https://geeks.kg")
+                types.InlineKeyboardButton(text="Добавить меню", callback_data="menu"),
             ],
         ]
     )

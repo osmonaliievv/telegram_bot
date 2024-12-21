@@ -17,13 +17,22 @@ class Database:
                     extra_comments TEXT
                 )
             """)
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS menu (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    food_name TEXT,
+                    price FLOAT,
+                    description TEXT,
+                    category TEXT)
+                        """)
             conn.commit()
 
     def save_survey(self, data: dict):
         with sqlite3.connect(self.path) as conn:
             conn.execute(
                 """
-                INSERT INTO survey_results (name, contact, food_rating, cleanliness_rating, extra_comments)
+                INSERT INTO survey_results 
+                (name, contact, food_rating, cleanliness_rating, extra_comments)
                 VALUES (?, ?, ?, ?, ?)
                 """,
                 (
@@ -32,6 +41,23 @@ class Database:
                     int(data.get("food_rating")),
                     int(data.get("cleanliness_rating")),
                     data.get("extra_comments")
+                )
+            )
+            conn.commit()
+
+    def save_menu(self, data: dict):
+        with sqlite3.connect(self.path) as conn:
+            conn.execute(
+                """
+                INSERT INTO menu 
+                (food_name, price, description, category)
+                VALUES (?, ?, ?, ?)
+                """,
+                (
+                    data.get("food_name"),
+                    data.get("price"),
+                    data.get("description"),
+                    data.get("category")
                 )
             )
             conn.commit()
