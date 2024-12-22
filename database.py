@@ -61,3 +61,12 @@ class Database:
                 )
             )
             conn.commit()
+
+    def get_menu_list(self):
+        with sqlite3.connect(self.path) as conn:
+            result = conn.execute("SELECT * from menu")
+            result.row_factory = sqlite3.Row
+            data = result.fetchall()
+            # data = result.fetchmany(10)
+
+            return [dict(row) for row in data]
