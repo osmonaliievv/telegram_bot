@@ -9,11 +9,18 @@ menu_list_router = Router()
 async def show_all_menu(callback: types.CallbackQuery):
     menu_list = database.get_menu_list()
     pprint(menu_list)
-    txt = ""
+
     for menu in menu_list:
-        txt += (f"Name: {menu['food_name']}\n"
-                f" Price: {menu['price']}\n"
-                f" Description: {menu['description']}\n"
-                f" Category: {menu['category']}\n"
-                f"-------------------------------------\n")
-    await callback.message.answer(txt)
+        cover = menu["cover"]
+        txt = (f"Name: {menu['food_name']}\n"
+               f"Price: {menu['price']}\n"
+               f"Description: {menu['description']}\n"
+               f"Category: {menu['category']}\n")
+
+        if cover:
+            await callback.message.answer_photo(
+                photo=cover,
+                caption=txt,
+            )
+        else:
+            await callback.message.answer(txt)

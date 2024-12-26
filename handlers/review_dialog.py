@@ -1,5 +1,5 @@
 from aiogram import Router, F, types
-from aiogram.fsm.state import StatesGroup, State
+from aiogram.fsm.state import StatesGroup, State, default_state
 from aiogram.fsm.context import FSMContext
 
 from bot_config import database
@@ -27,7 +27,7 @@ def validate_rating(rating: str) -> bool:
         return False
 
 
-@review_router.callback_query(F.data == "review")
+@review_router.callback_query(F.data == "review", default_state)
 async def start_feedback(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.answer("Как вас зовут?")
     await state.set_state(RestourantReview.name)

@@ -1,14 +1,13 @@
 from aiogram import Router, F, types
-from aiogram.fsm.state import StatesGroup, State
+from aiogram.fsm.state import StatesGroup, State, default_state
 from aiogram.fsm.context import FSMContext
 from bot_config import database
 from dotenv import dotenv_values
 
 menu_management_router = Router()
 
-# когда создатите переменную ADMIN_ID оберните id в кавычки
+# когда создадите переменную ADMIN_ID оберните id в кавычки
 menu_id = dotenv_values(".env")["ADMIN_ID"]
-
 
 
 class Menu(StatesGroup):
@@ -16,9 +15,10 @@ class Menu(StatesGroup):
     price = State()
     description = State()
     category = State()
+    cover = State()
 
 
-@menu_management_router.callback_query(F.data == "menu")
+@menu_management_router.callback_query(F.data == "menu", default_state)
 async def create_menu(callback: types.CallbackQuery, state: FSMContext):
     if callback.from_user.id == int(menu_id):
         await callback.message.answer("Введите название блюда: ")
@@ -55,9 +55,23 @@ async def process_description(message: types.Message, state: FSMContext):
 
 
 @menu_management_router.message(Menu.category)
-async def process_extra_comments(message: types.Message, state: FSMContext):
+async def process_category(message: types.Message, state: FSMContext):
     category = message.text.strip()
     await state.update_data(category=category)
+    await message.answer("Загрузите изображение для блюда: ")
+    await state.set_state(Menu.cover)
+
+
+@menu_management_router.message(Menu.cover)
+async def process_cover(message: types.Message, state: FSMContext):
+    if message.photo:
+        photo = message.photo[-1]
+        photo_file_id = photo.file_id
+        await state.update_data(cover=photo_file_id)
+    else:
+        await message.answer("Пожалуйста, загрузите изображение для блюда.")
+        return
+
     data = await state.get_data()
     summary = (
         f"Спасибо за добавление блюда!\n"
@@ -65,13 +79,15 @@ async def process_extra_comments(message: types.Message, state: FSMContext):
         f"Цена: {data.get('price')}\n"
         f"Описание: {data.get('description')}\n"
         f"Категория: {data.get('category')}\n"
+        f"Изображение добавлено."
     )
     await message.answer(summary)
+
     try:
         print("Данные для сохранения:", data)
         database.save_menu(data)
         await message.answer("Ваше блюдо сохранено!")
     except Exception as e:
         await message.answer(f"Ошибка сохранения блюда: {e}")
-    await state.clear()
 
+    await state.clear()
