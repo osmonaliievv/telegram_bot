@@ -1,4 +1,4 @@
-from aiogram import Router
+from aiogram import Router, F
 from .start import start_router
 from .menu_management import menu_management_router
 from .dishes import menu_list_router
@@ -18,3 +18,6 @@ private_router.include_router(review_router)
 private_router.include_router(menu_management_router)
 private_router.include_router(menu_list_router)
 private_router.include_router(echo_router)
+
+private_router.message.filter(F.chat.type == 'private')
+private_router.callback_query.filter(F.chat.type == 'private')
